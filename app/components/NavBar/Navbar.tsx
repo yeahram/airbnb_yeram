@@ -8,7 +8,6 @@ import UserMenu from "./UserMenu";
 interface NavbarProps {
   currentUser?: User | null;
 }
-
 const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
   return (
     <div className="fixed w-full bg-white z-10 shadow-sm">
