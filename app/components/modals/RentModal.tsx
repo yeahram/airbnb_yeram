@@ -1,12 +1,22 @@
 "use client";
+import { useMemo, useState } from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 import useRentModal from "@/app/hooks/useRentModal";
+
 import Modal from "./Modal";
-import { useMemo, useState } from "react";
-import { categories } from "../navbar/Categories";
 import Heading from "../Heading";
+import { categories } from "../navbar/Categories";
 import CategoryInput from "../Inputs/CategoryInput";
-import { FieldValues, set, useForm } from "react-hook-form";
+import CountrySelect from "../Inputs/CountrySelect";
+import Map from "../Map";
+import dynamic from "next/dynamic";
+
+// import axios from "axios";
+// import { toast } from "react-hot-toast";
+// import dynamic from "next/dynamic";
+// import { useRouter } from "next/navigation";
+// import Input from "../Inputs/Input";
 
 enum STEPS {
   CATEGORY = 0,
@@ -18,8 +28,10 @@ enum STEPS {
 }
 
 const RentModal = () => {
+  // const router = useRouter();
   const rentModal = useRentModal();
   const [step, setStep] = useState(STEPS.CATEGORY);
+
   const {
     register,
     handleSubmit,
@@ -40,7 +52,13 @@ const RentModal = () => {
       description: "",
     },
   });
+
   const category = watch("category");
+  const location = watch("location");
+  const Map = useMemo(
+    () => dynamic(() => import("../Map"), { ssr: false }),
+    [location]
+  );
   const setCustomValue = (id: string, value: any) => {
     setValue(id, value, {
       shouldValidate: true,
@@ -48,9 +66,11 @@ const RentModal = () => {
       shouldTouch: true,
     });
   };
+
   const onBack = () => {
     setStep((value) => value - 1);
   };
+
   const onNext = () => {
     setStep((value) => value + 1);
   };
@@ -59,6 +79,7 @@ const RentModal = () => {
     if (step === STEPS.PRICE) {
       return "Create";
     }
+
     return "Next";
   }, [step]);
 
@@ -66,35 +87,30 @@ const RentModal = () => {
     if (step === STEPS.CATEGORY) {
       return undefined;
     }
+
     return "Back";
   }, [step]);
+
   let bodyContent = (
-    <div
-      className="
-      flex
-      flex-col
-      gap-8
-      "
-    >
+    <div className="flex flex-col gap-8">
       <Heading
-        title="which of these best describe your place?"
+        title="Which of these best describes your place?"
         subtitle="Pick a category"
       />
       <div
         className="
-        grid
-        grid-cols-1
-        md:grid-cols-2
-        gap-3
-        max-h-[50vh]
-        overflow-y-auto"
+          grid 
+          grid-cols-1 
+          md:grid-cols-2 
+          gap-3
+          max-h-[50vh]
+          overflow-y-auto
+        "
       >
         {categories.map((item) => (
           <div key={item.label} className="col-span-1">
             <CategoryInput
-              onClick={(category) => {
-                setCustomValue("category", category);
-              }}
+              onClick={(category) => setCustomValue("category", category)}
               selected={category === item.label}
               label={item.label}
               icon={item.icon}
@@ -105,11 +121,27 @@ const RentModal = () => {
     </div>
   );
 
+  if (step === STEPS.LOCATION) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Where is your place located?"
+          subtitle="Help guests find you!"
+        />
+        <CountrySelect
+          value={location}
+          onChange={(value) => setCustomValue("location", value)}
+        />
+        <Map center={location?.latlng} />
+      </div>
+    );
+  }
+
   return (
     <Modal
       isOpen={rentModal.isOpen}
       onClose={rentModal.onClose}
-      onSubmit={rentModal.onClose}
+      onSubmit={onNext}
       actionLabel={actionLabel}
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
@@ -118,4 +150,5 @@ const RentModal = () => {
     />
   );
 };
+
 export default RentModal;
