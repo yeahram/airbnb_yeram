@@ -11,6 +11,7 @@ import CategoryInput from "../Inputs/CategoryInput";
 import CountrySelect from "../Inputs/CountrySelect";
 import Map from "../Map";
 import dynamic from "next/dynamic";
+import Counter from "../Inputs/Counter";
 
 // import axios from "axios";
 // import { toast } from "react-hot-toast";
@@ -136,7 +137,22 @@ const RentModal = () => {
       </div>
     );
   }
-
+  if (step === STEPS.INFO) {
+    bodyContent = (
+      <div
+        className="
+        flex
+        flex-col
+        gap-8"
+      >
+        <Heading
+          title="Share some basics about your place"
+          subtitle="What amenities do you have?"
+        />
+        <Counter></Counter>
+      </div>
+    );
+  }
   return (
     <Modal
       isOpen={rentModal.isOpen}
