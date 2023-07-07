@@ -12,6 +12,7 @@ import CountrySelect from "../Inputs/CountrySelect";
 import Map from "../Map";
 import dynamic from "next/dynamic";
 import Counter from "../Inputs/Counter";
+import ImageUpload from "../Inputs/imageUpload";
 
 // import axios from "axios";
 // import { toast } from "react-hot-toast";
@@ -56,6 +57,10 @@ const RentModal = () => {
 
   const category = watch("category");
   const location = watch("location");
+  const guestCount = watch("guestCount");
+  const roomCount = watch("roomCount");
+  const bathroomCount = watch("bathroomCount");
+
   const Map = useMemo(
     () => dynamic(() => import("../Map"), { ssr: false }),
     [location]
@@ -149,7 +154,42 @@ const RentModal = () => {
           title="Share some basics about your place"
           subtitle="What amenities do you have?"
         />
-        <Counter></Counter>
+        <Counter
+          title="Number of guests"
+          subtitle="How many guests do you allow?"
+          value={guestCount}
+          onChange={(value) => setCustomValue("guestCount", value)}
+        />
+        <hr />
+        <Counter
+          title="Rooms"
+          subtitle="How many rooms do you allow?"
+          value={roomCount}
+          onChange={(value) => setCustomValue("roomCount", value)}
+        />
+        <hr />
+        <Counter
+          title="Bathrooms"
+          subtitle="How many bathrooms do you allow?"
+          value={bathroomCount}
+          onChange={(value) => setCustomValue("bathroomCount", value)}
+        />
+      </div>
+    );
+  }
+  if (step === STEPS.IMAGES) {
+    bodyContent = (
+      <div
+        className="
+      flex
+      flex-col
+      gap-8"
+      >
+        <Heading
+          title="Add a photo of your place"
+          subtitle="Show guests what place looks like!"
+        />
+        <ImageUpload />
       </div>
     );
   }
