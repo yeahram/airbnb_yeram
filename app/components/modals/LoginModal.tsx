@@ -128,7 +128,7 @@ const LoginModal = () => {
         >
           <div>First time using Airbnb?</div>
           <div
-            onClick={registerModal.onClose}
+            onClick={toggle}
             className="
             text-neutral-800 
             cursor-pointer

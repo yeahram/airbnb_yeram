@@ -63,6 +63,8 @@ const RentModal = () => {
 
   const Map = useMemo(
     () => dynamic(() => import("../Map"), { ssr: false }),
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [location]
   );
   const setCustomValue = (id: string, value: any) => {
@@ -189,7 +191,7 @@ const RentModal = () => {
           title="Add a photo of your place"
           subtitle="Show guests what place looks like!"
         />
-        <ImageUpload />
+        {/* <ImageUpload /> */}
       </div>
     );
   }
