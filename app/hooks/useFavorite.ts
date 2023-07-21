@@ -18,7 +18,7 @@ const useFavorite = ({ listingId, currentUser }: IUseFavorite) => {
   const hasFavorited = useMemo(() => {
     const list = currentUser?.favoriteIds || [];
 
-    return listingId.includes(listingId);
+    return list.includes(listingId);
   }, [currentUser, listingId]);
 
   const toggleFavorite = useCallback(
