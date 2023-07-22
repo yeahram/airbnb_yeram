@@ -1,10 +1,10 @@
-import getListings from "./actions/getListings";
 import Image from "next/image";
 import ClientOnly from "./components/ClientOnly";
 import Container from "./components/Container";
 import EmptyState from "./components/EmptyState";
 import getCurrentUser from "./actions/getCurrentUser";
-
+import getListings from "./actions/getListings";
+import ListingCard from "@/app/components/listings/ListingCard";
 export default async function Home() {
   const listings = await getListings();
   const currentUser = await getCurrentUser();
@@ -32,7 +32,7 @@ export default async function Home() {
                 <ListingCard
                   currentUser={currentUser}
                   key={listing.id}
-                  data={listings}
+                  data={listing}
                 />
               );
             })}
