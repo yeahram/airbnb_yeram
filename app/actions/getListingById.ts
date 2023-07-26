@@ -19,7 +19,7 @@ export async function getListingById(params: IParams) {
     }
     return {
       ...listing,
-      createdAt: listing.createdAt.toISOString(),
+      createdAt: listing.createAt.toISOString(),
       user: {
         ...listing.user,
         createdAt: listing.user.createdAt.toISOString(),
