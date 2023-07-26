@@ -1,4 +1,5 @@
 "use client";
+import { Range } from "react-date-range";
 import { toast } from "react-hot-toast";
 import { differenceInCalendarDays, eachDayOfInterval } from "date-fns";
 import Container from "@/app/components/Container";
@@ -12,7 +13,6 @@ import { Reservation } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { difference } from "next/dist/build/utils";
 import ListingReservation from "@/app/components/listings/ListingReservation";
 
 const initialDateRange = {
@@ -50,7 +50,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
   const [isLoading, setIsLoading] = useState(false);
   const [totalPrice, setTotalPrice] = useState(listing.price);
-  const [dateRange, setDateRange] = useState(initialDateRange);
+  const [dateRange, setDateRange] = useState<Range>(initialDateRange);
   const onCreateReservation = useCallback(() => {
     if (!currentUser) {
       return loginModal.onOpen();
