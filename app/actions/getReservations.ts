@@ -32,12 +32,12 @@ export default async function getReservations(params: IParams) {
 
     const safeReservations = reservations.map((reservation) => ({
       ...reservation,
-      createAt: reservation.createdAt.toISOString(),
+      createdAt: reservation.createdAt.toISOString(),
       startDate: reservation.startDate.toISOString(),
       endDate: reservation.endDate.toISOString(),
       listing: {
         ...reservation.listing,
-        createAt: reservation.listing.createdAt.toISOString(),
+        createdAt: reservation.listing.createdAt.toISOString(),
       },
     }));
     return safeReservations;
