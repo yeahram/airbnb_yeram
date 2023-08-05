@@ -1,29 +1,22 @@
 "use client";
-import { useMemo, useState } from "react";
+
+import axios from "axios";
+import { toast } from "react-hot-toast";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
 import useRentModal from "@/app/hooks/useRentModal";
 
 import Modal from "./Modal";
-import Heading from "../Heading";
-import { categories } from "../navbar/Categories";
+import Counter from "../inputs/Counter";
 import CategoryInput from "../inputs/CategoryInput";
 import CountrySelect from "../inputs/CountrySelect";
-import Map from "../Map";
-import dynamic from "next/dynamic";
-import Counter from "../inputs/Counter";
-import ImageUpload from "../inputs/imageUpload";
+import { categories } from "../navbar/Categories";
+import ImageUpload from "../inputs/ImageUpload";
 import Input from "../inputs/Input";
-import { error } from "console";
-import axios from "axios";
-import { toast } from "react-hot-toast";
-import { useRouter } from "next/navigation";
-
-// import axios from "axios";
-// import { toast } from "react-hot-toast";
-// import dynamic from "next/dynamic";
-// import { useRouter } from "next/navigation";
-// import Input from "../Inputs/Input";
+import Heading from "../Heading";
 
 enum STEPS {
   CATEGORY = 0,
@@ -37,8 +30,9 @@ enum STEPS {
 const RentModal = () => {
   const router = useRouter();
   const rentModal = useRentModal();
-  const [step, setStep] = useState(STEPS.CATEGORY);
+
   const [isLoading, setIsLoading] = useState(false);
+  const [step, setStep] = useState(STEPS.CATEGORY);
 
   const {
     register,
@@ -61,24 +55,26 @@ const RentModal = () => {
     },
   });
 
-  const category = watch("category");
   const location = watch("location");
+  const category = watch("category");
   const guestCount = watch("guestCount");
   const roomCount = watch("roomCount");
   const bathroomCount = watch("bathroomCount");
   const imageSrc = watch("imageSrc");
 
   const Map = useMemo(
-    () => dynamic(() => import("../Map"), { ssr: false }),
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    () =>
+      dynamic(() => import("../Map"), {
+        ssr: false,
+      }),
     [location]
   );
+
   const setCustomValue = (id: string, value: any) => {
     setValue(id, value, {
-      shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
+      shouldValidate: true,
     });
   };
 
@@ -92,24 +88,26 @@ const RentModal = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     if (step !== STEPS.PRICE) {
-      //??
       return onNext();
     }
+
     setIsLoading(true);
 
     axios
       .post("/api/listings", data)
       .then(() => {
-        toast.success("Listing Created!");
+        toast.success("Listing created!");
         router.refresh();
         reset();
         setStep(STEPS.CATEGORY);
         rentModal.onClose();
       })
       .catch(() => {
-        toast.error("Something went wrong");
+        toast.error("Something went wrong.");
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const actionLabel = useMemo(() => {
@@ -173,56 +171,48 @@ const RentModal = () => {
       </div>
     );
   }
+
   if (step === STEPS.INFO) {
     bodyContent = (
-      <div
-        className="
-        flex
-        flex-col
-        gap-8"
-      >
+      <div className="flex flex-col gap-8">
         <Heading
           title="Share some basics about your place"
-          subtitle="What amenities do you have?"
+          subtitle="What amenitis do you have?"
         />
         <Counter
-          title="Number of guests"
-          subtitle="How many guests do you allow?"
-          value={guestCount}
           onChange={(value) => setCustomValue("guestCount", value)}
+          value={guestCount}
+          title="Guests"
+          subtitle="How many guests do you allow?"
         />
         <hr />
         <Counter
-          title="Rooms"
-          subtitle="How many rooms do you allow?"
-          value={roomCount}
           onChange={(value) => setCustomValue("roomCount", value)}
+          value={roomCount}
+          title="Rooms"
+          subtitle="How many rooms do you have?"
         />
         <hr />
         <Counter
-          title="Bathrooms"
-          subtitle="How many bathrooms do you allow?"
-          value={bathroomCount}
           onChange={(value) => setCustomValue("bathroomCount", value)}
+          value={bathroomCount}
+          title="Bathrooms"
+          subtitle="How many bathrooms do you have?"
         />
       </div>
     );
   }
+
   if (step === STEPS.IMAGES) {
     bodyContent = (
-      <div
-        className="
-      flex
-      flex-col
-      gap-8"
-      >
+      <div className="flex flex-col gap-8">
         <Heading
           title="Add a photo of your place"
-          subtitle="Show guests what place looks like!"
+          subtitle="Show guests what your place looks like!"
         />
         <ImageUpload
-          value={imageSrc}
           onChange={(value) => setCustomValue("imageSrc", value)}
+          value={imageSrc}
         />
       </div>
     );
@@ -243,7 +233,7 @@ const RentModal = () => {
           errors={errors}
           required
         />
-        <hr />{" "}
+        <hr />
         <Input
           id="description"
           label="Description"
@@ -255,6 +245,7 @@ const RentModal = () => {
       </div>
     );
   }
+
   if (step === STEPS.PRICE) {
     bodyContent = (
       <div className="flex flex-col gap-8">
@@ -278,13 +269,14 @@ const RentModal = () => {
 
   return (
     <Modal
+      disabled={isLoading}
       isOpen={rentModal.isOpen}
-      onClose={rentModal.onClose}
-      onSubmit={handleSubmit(onSubmit)}
+      title="Airbnb your home!"
       actionLabel={actionLabel}
+      onSubmit={handleSubmit(onSubmit)}
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
-      title="Airbnb your home!"
+      onClose={rentModal.onClose}
       body={bodyContent}
     />
   );
