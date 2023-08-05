@@ -11,7 +11,7 @@ interface DatePickerProps {
   disabledDates?: Date[];
 }
 
-const Calender: React.FC<DatePickerProps> = ({
+const Calendar: React.FC<DatePickerProps> = ({
   value,
   onChange,
   disabledDates,
@@ -30,4 +30,4 @@ const Calender: React.FC<DatePickerProps> = ({
   );
 };
 
-export default Calender;
+export default Calendar;
