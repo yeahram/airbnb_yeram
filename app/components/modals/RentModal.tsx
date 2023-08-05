@@ -10,12 +10,12 @@ import { useMemo, useState } from "react";
 import useRentModal from "@/app/hooks/useRentModal";
 
 import Modal from "./Modal";
-import Counter from "../inputs/Counter";
-import CategoryInput from "../inputs/CategoryInput";
-import CountrySelect from "../inputs/CountrySelect";
+import Counter from "@/app/components/inputs/Counter";
+import CategoryInput from "@/app/components/inputs/CategoryInput";
+import CountrySelect from "@/app/components/inputs/CountrySelect";
 import { categories } from "../navbar/Categories";
 import ImageUpload from "../inputs/ImageUpload";
-import Input from "../inputs/Input";
+import Input from "@/app/components/inputs/Input";
 import Heading from "../Heading";
 
 enum STEPS {
@@ -67,6 +67,7 @@ const RentModal = () => {
       dynamic(() => import("../Map"), {
         ssr: false,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [location]
   );
 
