@@ -10,7 +10,7 @@ const ErrorState: React.FC<ErrorStateProps> = ({ error }) => {
     console.error(error);
   }, [error]);
   return (
-    <EmptyState title="Uh Oh" subtitle="Something went wron!"></EmptyState>
+    <EmptyState title="Uh Oh" subtitle="Something went wrong!"></EmptyState>
   );
 };
 export default ErrorState;
